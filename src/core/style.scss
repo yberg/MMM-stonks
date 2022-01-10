@@ -1,0 +1,66 @@
+body {
+  --positive: #0474ca;
+  --negative: #d0184d;
+}
+
+.container {
+  max-width: 40vw;
+  font-size: 1rem;
+}
+
+.positive {
+  color: var(--positive);
+}
+
+.negative {
+  color: var(--negative);
+}
+
+.space {
+  height: 1em;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+
+  &__label {
+    color: white;
+  }
+}
+
+.stocks {
+  &__label {
+    font-size: 0.7em;
+    text-align: left;
+  }
+
+  .stock {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    color: white;
+    font-size: 0.9em;
+
+    &__flag {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: -1.5em;
+      width: 1em;
+      height: 1em;
+      border-radius: 1em;
+    }
+
+    &__name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 2em;
+    }
+
+    &__change {
+      white-space: nowrap;
+    }
+  }
+}

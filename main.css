@@ -1,0 +1,62 @@
+/*!**************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/core/style.scss ***!
+  \**************************************************************************************************************/
+body {
+  --positive: #0474ca;
+  --negative: #d0184d;
+}
+
+.container {
+  max-width: 40vw;
+  font-size: 1rem;
+}
+
+.positive {
+  color: var(--positive);
+}
+
+.negative {
+  color: var(--negative);
+}
+
+.space {
+  height: 1em;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+}
+.total__label {
+  color: white;
+}
+
+.stocks__label {
+  font-size: 0.7em;
+  text-align: left;
+}
+.stocks .stock {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  color: white;
+  font-size: 0.9em;
+}
+.stocks .stock__flag {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -1.5em;
+  width: 1em;
+  height: 1em;
+  border-radius: 1em;
+}
+.stocks .stock__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 2em;
+}
+.stocks .stock__change {
+  white-space: nowrap;
+}
