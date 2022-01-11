@@ -1,3 +1,0 @@
-export const stocks = [];
-
-export const watchlist = [{ symbol: "^OMXS30" }, { symbol: "^OMXS30GI" }, { symbol: "^GSPC" }];

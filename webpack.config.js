@@ -1,53 +1,78 @@
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = [
   {
-    entry: "./src/core/index.js",
+    entry: './src/core/module.js',
     output: {
-      filename: "MMM-stonks.js",
-      path: path.resolve(__dirname)
+      filename: 'MMM-stonks.js',
+      path: path.resolve(__dirname),
     },
-    mode: "development",
+    mode: 'development',
     plugins: [new MiniCssExtractPlugin()],
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.jsx?$/,
           exclude: /node_modules/,
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ["@babel/preset-react"]
-          }
+            presets: ['@babel/preset-react'],
+          },
         },
         {
           test: /\.s[ac]ss$/i,
-          use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
-        }
-      ]
-    }
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        },
+      ],
+    },
   },
   {
-    entry: "./src/helper/index.js",
+    entry: './src/app/index.js',
     output: {
-      filename: "node_helper.js",
+      filename: 'index.js',
+      path: path.resolve(__dirname, 'public'),
+    },
+    mode: 'development',
+    plugins: [new MiniCssExtractPlugin()],
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-react'],
+          },
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        },
+      ],
+    },
+  },
+  {
+    entry: './src/helper/index.js',
+    output: {
+      filename: 'node_helper.js',
       path: path.resolve(__dirname),
-      libraryTarget: "umd"
+      libraryTarget: 'umd',
     },
-    target: "node",
+    target: 'node',
     externals: {
-      node_helper: "node_helper",
-      logger: "logger"
+      node_helper: 'node_helper',
+      logger: 'logger',
     },
-    mode: "development",
+    mode: 'development',
     module: {
       rules: [
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: "babel-loader"
-        }
-      ]
-    }
-  }
+          loader: 'babel-loader',
+        },
+      ],
+    },
+  },
 ];
