@@ -1,60 +1,58 @@
 import { render, h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
-
-import * as db from '../utils/db';
+import { useEffect, useState } from 'preact/hooks';
 
 /** @jsx h */
+
+const BASE_URL = 'http://localhost:8008';
 
 const App = ({}) => {
   const [stocks, setStocks] = useState({});
   const [watchlist, setWatchlist] = useState({});
-  const dbPromise = useRef();
 
   useEffect(() => {
     (async () => {
-      dbPromise.current = await connect();
-
-      const stockRecords = await dbPromise.current.getAll('stocks');
-      const stocks = stockRecords.reduce(
-        (acc, stock) => ({ ...acc, [stock.symbol]: stock.amount }),
-        {},
-      );
+      const stocks = await getStocks();
       setStocks(stocks);
 
-      const watchlistRecords = await dbPromise.current.getAll('watchlist');
-      const watchlist = watchlistRecords.reduce(
-        (acc, stock) => ({ ...acc, [stock.symbol]: null }),
-        {},
-      );
+      const watchlist = await getWatchlist();
       setWatchlist(watchlist);
     })();
   }, []);
 
-  const connect = () => {
-    return db.connect('MMM-stonks');
+  const getStocks = async () => {
+    const res = await fetch(`${BASE_URL}/stocks`);
+    return res.json();
+  };
+
+  const saveStocks = async () => {
+    const res = await fetch(`${BASE_URL}/stocks`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(stocks),
+    });
+    return res.json();
+  };
+
+  const getWatchlist = async () => {
+    const res = await fetch(`${BASE_URL}/watchlist`);
+    return res.json();
+  };
+
+  const saveWatchlist = async () => {
+    const res = await fetch(`${BASE_URL}/watchlist`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(watchlist),
+    });
+    return res.json();
   };
 
   const save = async () => {
-    await Promise.all([
-      dbPromise.current.clear('stocks'),
-      dbPromise.current.clear('watchlist'),
-    ]);
-    const stockPromises = Object.entries(stocks)
-      .filter(([symbol]) => !!symbol)
-      .map(async ([symbol, amount]) => {
-        return dbPromise.current.put('stocks', {
-          symbol,
-          amount,
-        });
-      });
-    const watchlistPromises = Object.entries(watchlist)
-      .filter(([symbol]) => !!symbol)
-      .map(async ([symbol]) => {
-        return dbPromise.current.put('watchlist', {
-          symbol,
-        });
-      });
-    await Promise.all([...stockPromises, watchlistPromises]);
+    await Promise.all([saveStocks(), saveWatchlist()]);
   };
 
   return (

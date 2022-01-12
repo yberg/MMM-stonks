@@ -1,6 +1,5 @@
 import { render, h } from 'preact';
 
-import * as dbUtils from '../utils/db';
 import Summary from './components/Summary.jsx';
 import './style.scss';
 
@@ -12,8 +11,6 @@ Module.register('MMM-stonks', {
   },
 
   async start() {
-    this.db = await this.connect();
-
     this.loadSummary();
     setInterval(() => {
       this.loadSummary();
@@ -21,18 +18,12 @@ Module.register('MMM-stonks', {
   },
 
   async loadSummary() {
-    const stocks = await this.db.getAll('stocks');
-    const watchlist = await this.db.getAll('watchlist');
-    this.sendSocketNotification('STONKS:SUMMARY_REQUEST', { stocks, watchlist });
-  },
-
-  async connect() {
-    return dbUtils.connect('MMM-stonks');
+    this.sendSocketNotification('STONKS:GET_SUMMARY');
   },
 
   socketNotificationReceived(notificationIdentifier, payload) {
     console.log({ notificationIdentifier, payload });
-    if (notificationIdentifier === 'STONKS:SUMMARY_RESPONSE') {
+    if (notificationIdentifier === 'STONKS:GET_SUMMARY_RESPONSE') {
       Log.log(notificationIdentifier, payload);
       this.summary = payload;
       this.updateDom(250);

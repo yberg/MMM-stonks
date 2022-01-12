@@ -4,8 +4,6 @@ const converters = require('./converters').default;
 
 let _stocks = [];
 
-export const getStock = (symbol) => _stocks.find((s) => s.symbol === symbol);
-
 export const getQuote = async (symbol) => {
   const quote = await yahoo.quote({
     symbol,
@@ -29,10 +27,10 @@ export const getTotalValue = (
 ) => {
   const value = quotes.filter(predicate).reduce((total, quote) => {
     const { symbol, currency: quoteCurrency } = quote.price;
-    const stock = getStock(symbol);
+    const amount = _stocks[symbol];
     return (
       total +
-      stock.amount * quote.price[property] * converters[quoteCurrency][currency]
+      amount * quote.price[property] * converters[quoteCurrency][currency]
     );
   }, 0);
   return value;
@@ -58,13 +56,11 @@ export const getChanges = (quotes, { currency = 'SEK' } = {}) => {
       regularMarketChange,
       regularMarketChangePercent,
     } = quote.price;
-    const stock = getStock(symbol);
+    const amount = _stocks[symbol];
     return {
       symbol,
       change:
-        regularMarketChange *
-        stock.amount *
-        converters[quoteCurrency][currency],
+        regularMarketChange * amount * converters[quoteCurrency][currency],
       changePercent: regularMarketChangePercent,
     };
   });
@@ -72,10 +68,10 @@ export const getChanges = (quotes, { currency = 'SEK' } = {}) => {
   return changes;
 };
 
-export const getSummary = async ({ stocks = [], watchlist = [] }) => {
+export const getSummary = async ({ stocks = {}, watchlist = {} }) => {
   _stocks = stocks;
-  const stockSymbols = stocks.map((stock) => stock.symbol);
-  const watchlistSymbols = watchlist.map((quote) => quote.symbol);
+  const stockSymbols = Object.keys(stocks);
+  const watchlistSymbols = Object.keys(watchlist);
   const quotes = await getQuotes(stockSymbols);
   const watchlistQuotes = await getQuotes(watchlistSymbols);
   const summary = {
