@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 /** @jsx h */
 
-const BASE_URL = 'http://localhost:8008';
+const BASE_URL = `http://${window.location.hostname}:8008`;
 
 const App = ({}) => {
   const [stocks, setStocks] = useState({});
